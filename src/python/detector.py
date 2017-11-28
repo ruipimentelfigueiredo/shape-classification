@@ -91,3 +91,24 @@ class Detector(object):
   
   def close_sess(self):
     self.sess.close()
+    
+if __name__ == "__main__":
+  import skimage
+  from PIL import Image
+  from matplotlib import pyplot as plt
+  
+  def load_image_into_numpy_array(image):
+    (im_width, im_height) = image.size
+    return np.array(image.getdata()).reshape(
+      (im_height, im_width, 3)).astype(np.uint8)
+  
+  
+  my_detector = Detector()
+  img_path = "/home/atabak/Desktop/box.png"
+  image = skimage.io.imread(img_path)
+  image = skimage.transform.resize(image, [300,300], mode='reflect')
+  skimage.io.imsave(img_path, image)
+  image = Image.open(img_path)
+  image_np = load_image_into_numpy_array(image)
+  my_detector.overlay_shapes(image_np)
+  plt.imshow(image_np)
