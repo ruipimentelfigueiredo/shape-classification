@@ -1,6 +1,4 @@
-[submodule "lib/faster-rcnn"]
-	path = lib/faster-rcnn
-	url = https://github.com/ruipimentelfigueiredo/faster-rcnn
-[submodule "lib/caffe"]
-	path = lib/caffe
-	url = https://github.com/BVLC/caffe
+[submodule "lib/models"]
+	path = lib/models
+	url = https://github.com/tensorflow/models
+
