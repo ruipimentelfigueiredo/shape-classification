@@ -5,7 +5,7 @@ import os
 import tensorflow as tf
 import sys
 import inspect
-#from subprocess import call
+
 
 class Detector(object):
   def __init__(self, NUM_CLASSES=3):
@@ -18,10 +18,7 @@ class Detector(object):
     sys.path.append(os.path.join(root, 'lib', 'models', 'research'))
     sys.path.append(os.path.join(root, 'lib', 'models', 'research', 'slim'))
     
-   # os.chdir(os.path.join(root, 'lib', 'models', 'research/'))    
-   # print(os.getcwd())
-   # call(["protoc", "object_detection/protos/*.proto", "--python_out=."])
-    
+    print(sys.path)
     from utils import label_map_util
     from utils import visualization_utils
     self.vis_util = visualization_utils
@@ -46,28 +43,36 @@ class Detector(object):
     self.detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
     self.detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
     self.detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
-    self.num_detections = detection_graph.get_tensor_by_name('num_detections:0')
     self.sess = tf.Session(graph=detection_graph)
     
-  
-  def overlay_shapes(self, rgb_uint8_img):
+    
+  def detect(self, rgb_uint8_img, threshold=0.5):
     image_np_expanded = np.expand_dims(rgb_uint8_img, axis=0)
-    (boxes, scores, classes, num) = self.sess.run(
+    (boxes, scores, classes) = self.sess.run(
                                                   [self.detection_boxes, 
                                                    self.detection_scores, 
-                                                   self.detection_classes, 
-                                                   self.num_detections],
+                                                   self.detection_classes],
                                                    feed_dict={self.image_tensor: image_np_expanded})
+    filtered_scores = scores.squeeze() > threshold
+    filtered_boxes = boxes.squeeze()[filtered_scores] 
+    filtered_classes = classes.squeeze()[filtered_scores]   
+    
+    return (filtered_boxes, filtered_scores, filtered_classes)
+  
+  def overlay_shapes(self, rgb_uint8_img, threshold=0.5):
+    boxes, scores, classes = self.detect(rgb_uint8_img, threshold)
     self.vis_util.visualize_boxes_and_labels_on_image_array(
           rgb_uint8_img,
-          np.squeeze(boxes),
-          np.squeeze(classes).astype(np.int32),
-          np.squeeze(scores),
+          boxes,
+          classes.astype(np.int32),
+          scores,
           self.category_index,
+          min_score_thresh=threshold,
           use_normalized_coordinates=True,
           line_thickness=2)
     return rgb_uint8_img
   
+ 
   def close_sess(self):
     self.sess.close()
     
