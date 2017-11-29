@@ -1,2 +1,4 @@
 /build
 *~
+
+lib/models/research/object_detection/protos/*.py
