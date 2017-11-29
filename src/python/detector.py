@@ -94,3 +94,4 @@ if __name__ == "__main__":
   my_detector.overlay_shapes(image_np)
   plt.imshow(image_np)
   plt.savefig('test2.png', format='png', bbox_inches='tight')
+  my_detector.close_sess()
