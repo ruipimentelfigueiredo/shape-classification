@@ -53,11 +53,12 @@ class Detector(object):
                                                    self.detection_scores, 
                                                    self.detection_classes],
                                                    feed_dict={self.image_tensor: image_np_expanded})
-    filtered_scores = scores.squeeze() > threshold
+    scores = scores.squeeze()
+    filtered_scores = scores > threshold
     filtered_boxes = boxes.squeeze()[filtered_scores] 
     filtered_classes = classes.squeeze()[filtered_scores]   
     
-    return (filtered_boxes, filtered_scores, filtered_classes)
+    return (filtered_boxes, filtered_scores, scores[filtered_classes])
   
   def overlay_shapes(self, rgb_uint8_img, threshold=0.5):
     boxes, scores, classes = self.detect(rgb_uint8_img, threshold)
