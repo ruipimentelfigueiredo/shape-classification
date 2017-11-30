@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
-find_package(Caffe REQUIRED)
+#find_package(Caffe REQUIRED)
 find_package(TinyXML REQUIRED)
 find_package(CUDA REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -16,18 +16,18 @@ find_package(Boost COMPONENTS system filesystem regex REQUIRED)
 
 
 
-add_definitions(${Caffe_DEFINITIONS})    # ex. -DCPU_ONLY
+#add_definitions(${Caffe_DEFINITIONS})    # ex. -DCPU_ONLY
 
 
-message(${Caffe_INCLUDE_DIRS})
-message("RUUUUUUUUUUUUUUUUUI")
-include_directories(include ${Caffe_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+#message(${Caffe_INCLUDE_DIRS})
+#message("RUUUUUUUUUUUUUUUUUI")
+#include_directories(include ${Caffe_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 
 # CLASSIFIER LIBS
 
-set(GLOG_LIB glog)
-add_library(cylinder_classifier src/cylinder_classifier.cpp)
-target_link_libraries(cylinder_classifier ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
+#set(GLOG_LIB glog)
+#add_library(cylinder_classifier src/cylinder_classifier.cpp)
+#target_link_libraries(cylinder_classifier ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
 
 
