@@ -2,4 +2,8 @@
 *~
 *.pyc
 lib/models/research/object_detection/protos/*.py
+<<<<<<< HEAD
 inference_results/*
+=======
+*.pyc
+>>>>>>> temporary-detached

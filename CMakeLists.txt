@@ -20,14 +20,23 @@ find_package(Boost COMPONENTS system filesystem regex REQUIRED)
 
 
 #message(${Caffe_INCLUDE_DIRS})
+<<<<<<< HEAD
 #message("RUUUUUUUUUUUUUUUUUI")
 #include_directories(include ${Caffe_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+=======
+
+include_directories(include ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})  #${Caffe_INCLUDE_DIRS}
+>>>>>>> temporary-detached
 
 
 # CLASSIFIER LIBS
 
 #set(GLOG_LIB glog)
 #add_library(cylinder_classifier src/cylinder_classifier.cpp)
+<<<<<<< HEAD
 #target_link_libraries(cylinder_classifier ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
+=======
+#target_link_libraries(cylinder_classifier ${Boost_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS}) #${Caffe_LIBRARIES}
+>>>>>>> temporary-detached
 
 
