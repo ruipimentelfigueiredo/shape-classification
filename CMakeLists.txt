@@ -10,8 +10,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
 #find_package(Caffe REQUIRED)
 find_package(TinyXML REQUIRED)
-find_package(CUDA REQUIRED)
-find_package(OpenCV REQUIRED)
+#find_package(CUDA REQUIRED)
+find_package(OpenCV 3.4 REQUIRED)
 find_package(Boost COMPONENTS system filesystem regex REQUIRED)
 
 
@@ -25,6 +25,8 @@ find_package(Boost COMPONENTS system filesystem regex REQUIRED)
 include_directories(include ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})  #${Caffe_INCLUDE_DIRS}
 
 
+add_executable(object_detector src/cpp/shape_detection.cpp)
+target_link_libraries(object_detector ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
 
 # CLASSIFIER LIBS
 
