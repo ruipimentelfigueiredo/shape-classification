@@ -12,9 +12,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #find_package(TinyXML REQUIRED)
 #find_package(CUDA REQUIRED)
 
-set(CMAKE_PREFIX_PATH "/usr/local")
+#set(CMAKE_PREFIX_PATH "/usr/local")
 find_package(OpenCV 3.4 REQUIRED)
-set(OpenCV_INCLUDE_DIRS "/usr/local/include")
+#set(OpenCV_INCLUDE_DIRS "/usr/local/include")
 
 find_package(Boost COMPONENTS system filesystem regex REQUIRED)
 
@@ -22,7 +22,7 @@ MESSAGE(${OpenCV_INCLUDE_DIRS})
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})  #${Caffe_INCLUDE_DIRS}
 link_directories(${OpenCV_LIB_DIR})
 
-add_library(object_detector src/cpp/shape_detection.cpp)
+add_executable(object_detector src/cpp/object_detection.cpp)
 target_link_libraries(object_detector ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
 
 # CLASSIFIER LIBS
