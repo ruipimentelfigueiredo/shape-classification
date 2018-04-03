@@ -22,7 +22,7 @@ MESSAGE(${OpenCV_INCLUDE_DIRS})
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})  #${Caffe_INCLUDE_DIRS}
 link_directories(${OpenCV_LIB_DIR})
 
-add_executable(object_detector src/cpp/object_detection.cpp)
+add_library(object_detector src/cpp/object_detection.cpp)
 target_link_libraries(object_detector ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
 
 # CLASSIFIER LIBS
