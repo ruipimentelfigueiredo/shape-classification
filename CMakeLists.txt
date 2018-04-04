@@ -18,19 +18,13 @@ find_package(OpenCV 3.4 REQUIRED)
 
 find_package(Boost COMPONENTS system filesystem regex REQUIRED)
 
-MESSAGE(${OpenCV_INCLUDE_DIRS})
+MESSAGE(${OpenCV_VERSION})
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})  #${Caffe_INCLUDE_DIRS}
-link_directories(${OpenCV_LIB_DIR})
+#link_directories(${OpenCV_LIB_DIR})
 
 add_library(object_detector src/cpp/object_detection.cpp)
-target_link_libraries(object_detector ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
+target_link_libraries(object_detector ${Boost_LIBRARIES} ${OpenCV_LIBS})
 
-# CLASSIFIER LIBS
-
-#set(GLOG_LIB glog)
-#add_library(cylinder_classifier src/cylinder_classifier.cpp)
-
-#target_link_libraries(cylinder_classifier ${Boost_LIBRARIES} ${Caffe_LIBRARIES} ${GLOG_LIB}  ${OpenCV_LIBS})
 
 
 

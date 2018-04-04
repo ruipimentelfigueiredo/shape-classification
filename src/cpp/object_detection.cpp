@@ -151,7 +151,7 @@ cv::Mat ObjectDetection::detect(cv::Mat & frame, const Scalar & mean, const doub
 }
 
 
-int main(int argc, char** argv)
+/*int main(int argc, char** argv)
 {
     CommandLineParser parser(argc, argv, keys);
     parser.about("Use this script to run object detection deep learning networks using OpenCV.");
@@ -185,11 +185,7 @@ int main(int argc, char** argv)
     // Load a model.
     CV_Assert(parser.has("model"));
 
-
-    std::string model=parser.get<std::string>("model");
-    std::string config=parser.get<std::string>("config");
-    std::cout << model << std::endl;
-    ObjectDetection object_detector(model, config,parser.get<int>("backend"), parser.get<int>("target"),  swapRB, inpWidth, inpHeight);
+    ObjectDetection object_detector(parser.get<std::string>("model"), parser.get<std::string>("config"),parser.get<int>("backend"), parser.get<int>("target"),  swapRB, inpWidth, inpHeight);
 
 
     // Open a video file or an image file or a camera stream.
@@ -215,7 +211,7 @@ int main(int argc, char** argv)
 
     }
     return 0;
-}
+}*/
 
 
 

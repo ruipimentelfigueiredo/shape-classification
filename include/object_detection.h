@@ -65,5 +65,6 @@ class ObjectDetection {
 
 public:
     ObjectDetection(const std::string & model, const std::string & config, const int & backend, const int & target, const bool & swapRB_, const int inpWidth_, const int inpHeight_);
+    ~ObjectDetection() {};
     cv::Mat detect(cv::Mat & frame, const Scalar & mean, const double & scale);
 };
