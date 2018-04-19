@@ -1,5 +1,19 @@
-# shape-detection
+# shape classification using caffe
 
-In the terminal that uses the detector, cd to lib/models/research and run:
+## Training 
+1. Download images dataset (train/test), and pre-trained caffe models: bash download.sh (change the folder paths inside)
 
-protoc object_detection/protos/*.proto --python_out=.
+2. Pre-process dataset:
+
+  - 2.1 Separate images into train and test, augment the train dataset (vertical flipping): python scripts/modify_dataset.py
+  
+  - 2.2 run create_lmdb.py to transform images to lmdb files (PUT FOLDER HERE AS A VAR)
+  
+  - 2.3 compute mean.binaryproto: $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb $DATASET_DIR/train_lmdb $DATASET_DIR/mean.binaryproto
+  
+3. Train: $CAFFE_DIR/build/tools/caffe train --solver=$SHAPE_DETECTION_DIR/networks/squeezenet/solver.prototxt --weights $$SHAPE_DETECTION_DIR/networks/squeezenet/squeezenet_v1.1.caffemodel 2>&1 | tee $DATASET_DIR/model_1_train.log
+
+## Testing
+the .log file contains train and test error 
+
+
