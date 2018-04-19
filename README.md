@@ -9,9 +9,9 @@
 
   - 3.1 Separate images into train and test, augment the train dataset (vertical flipping): 
   
-  ```
-  python scripts/modify_dataset.py
-  ```
+```
+python python/modify_dataset.py dataset/
+```
   
   - 3.2 run create_lmdb.py to transform images to lmdb files (PUT FOLDER HERE AS A VAR)
   
