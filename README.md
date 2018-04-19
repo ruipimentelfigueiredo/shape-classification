@@ -40,7 +40,7 @@ python python/modify_dataset.py dataset/
   
   to
   
-  ```source: "$SHAPE_DETECTION_DIR/dataset/lmdb/test_lmdb"```
+  ```source: "$SHAPE_DETECTION_DIR/dataset/lmdb/validation_lmdb"```
   
   
   - 4.2 Train:
