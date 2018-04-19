@@ -1,7 +1,7 @@
 # shape classification using caffe
 
 ## Training 
-1. Go inside $SHAPE_DETECTION_DIR folder
+1. Go inside ```$SHAPE_DETECTION_DIR``` folder
 
 2. Download images dataset (train/test), and pre-trained caffe models: bash download.sh (change the folder paths inside)
 
@@ -14,10 +14,13 @@ python python/modify_dataset.py dataset/
 ```
   
   - 3.2 run create_lmdb.py to transform images to lmdb files (PUT FOLDER HERE AS A VAR)
-  
+  ```
+  python python/create_lmdb.py dataset dataset/lmdb
+  ```
+
   - 3.3 compute mean.binaryproto: 
   ```
-  $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb $DATASET_DIR/train_lmdb $DATASET_DIR/mean.binaryproto
+  $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb $DATASET_DIR/lmdb/train_lmdb $DATASET_DIR/mean.binaryproto
   ```
 4. Train: 
 ```
