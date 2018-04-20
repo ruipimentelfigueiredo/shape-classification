@@ -13,7 +13,7 @@
 python python/modify_dataset.py dataset/
 ```
   
-  - 3.2 run create_lmdb.py to transform images to lmdb files (PUT FOLDER HERE AS A VAR)
+  - 3.2 run create_lmdb.py to transform images to lmdb files
   ```
   python python/create_lmdb.py dataset dataset/lmdb
   ```
@@ -23,25 +23,10 @@ python python/modify_dataset.py dataset/
   $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb $DATASET_DIR/lmdb/train_lmdb $DATASET_DIR/mean.binaryproto
   ```
 4. Train: 
-  - 4.1 Open train_val.prototxt. 
-  
-  Locate and change lines:
-  from
-  
-  ```source: "examples/imagenet/ilsvrc12_train_lmdb"``` 
-  
-  to
-  
-  ```source: "$SHAPE_DETECTION_DIR/dataset/lmdb/train_lmdb"```
 
-  from
+  - 4.1 Change train_val.prototxt and solver.prototxt. 
   
-  ```source: "examples/imagenet/ilsvrc12_val_lmdb"``` 
-  
-  to
-  
-  ```source: "$SHAPE_DETECTION_DIR/dataset/lmdb/validation_lmdb"```
-  
+  Locate and change all ocurrences of ```/shape-detection-path``` to ```$SHAPE_DETECTION_DIR```:
   
   - 4.2 Train:
 ```
