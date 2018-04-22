@@ -94,12 +94,14 @@ void ObjectDetection::postprocess(Mat& frame, const Mat& out, Net& net)
 }
 
 
-ObjectDetection::ObjectDetection(const std::string & model, const int & backend, const int & target, const bool & swapRB_, const int inpWidth_, const int inpHeight_) :
-net(dnn::readNetFromTensorflow(model)),
-swapRB(swapRB_),
-inpWidth(inpWidth_),
-inpHeight(inpHeight_)
+ObjectDetection::ObjectDetection(const std::string & model, const std::string & config, const int & backend, const int & target, const bool & swapRB_, const int inpWidth_, const int inpHeight_) :
+
+	swapRB(swapRB_),
+	inpWidth(inpWidth_),
+	inpHeight(inpHeight_)
 {
+	std::cout << model << std::endl;
+	net=dnn::readNetFromCaffe(model, config);
 	// Load a model.
 	net.setPreferableBackend(backend);
 	net.setPreferableTarget(target);
@@ -111,23 +113,26 @@ inpHeight(inpHeight_)
 	createTrackbar("Confidence threshold, %", kWinName, &initialConf, 99, callback, this);
 }
 
-
-
 cv::Mat ObjectDetection::detect(cv::Mat & frame, const Scalar & mean, const double & scale)
 {
 	// Create a 4D blob from a frame.
 	Size inpSize(inpWidth > 0 ? inpWidth : frame.cols, inpHeight > 0 ? inpHeight : frame.rows);
-	cv::Mat blob=blobFromImage(frame, scale, inpSize, mean, swapRB);
-		     //blobFromImage(InputArray image, double scalefactor=1.0, const Size& size = Size(),
-		     //                      const Scalar& mean = Scalar(), bool swapRB=true, bool crop=true);
+	std::cout << inpSize << std::endl;
+	std::cout << mean << std::endl;
+	cv::Mat blob=blobFromImage(frame);//, scale, inpSize, mean, swapRB);
+	//blobFromImage(InputArray image, double scalefactor=1.0, const Size& size = Size(),
+	//                      const Scalar& mean = Scalar(), bool swapRB=true, bool crop=true);
 	// Run a model.
+
 	net.setInput(blob);
+
 	if (net.getLayer(0)->outputNameToIndex("im_info") != -1)  // Faster-RCNN or R-FCN
 	{
 	    resize(frame, frame, inpSize);
 	    Mat imInfo = (Mat_<float>(1, 3) << inpSize.height, inpSize.width, 1.6f);
 	    net.setInput(imInfo, "im_info");
 	}
+
 	Mat out = net.forward();
 
 	postprocess(frame, out, net);
@@ -146,7 +151,7 @@ cv::Mat ObjectDetection::detect(cv::Mat & frame, const Scalar & mean, const doub
 }
 
 
-int main(int argc, char** argv)
+/*int main(int argc, char** argv)
 {
     CommandLineParser parser(argc, argv, keys);
     parser.about("Use this script to run object detection deep learning networks using OpenCV.");
@@ -158,7 +163,7 @@ int main(int argc, char** argv)
 
     confThreshold = parser.get<float>("thr");
     float scale = parser.get<float>("scale");
-    Scalar mean;// = parser.get<Scalar>("mean");
+    Scalar mean = Scalar(0,0,0); //parser.get<Scalar>("mean");
     bool swapRB = parser.get<bool>("rgb");
     int inpWidth = parser.get<int>("width");
     int inpHeight = parser.get<int>("height");
@@ -180,7 +185,7 @@ int main(int argc, char** argv)
     // Load a model.
     CV_Assert(parser.has("model"));
 
-    ObjectDetection object_detector(parser.get<String>("model"), parser.get<int>("backend"), parser.get<int>("target"),  swapRB, inpWidth, inpHeight);
+    ObjectDetection object_detector(parser.get<std::string>("model"), parser.get<std::string>("config"),parser.get<int>("backend"), parser.get<int>("target"),  swapRB, inpWidth, inpHeight);
 
 
     // Open a video file or an image file or a camera stream.
@@ -206,9 +211,7 @@ int main(int argc, char** argv)
 
     }
     return 0;
-}
-
-
+}*/
 
 
 
