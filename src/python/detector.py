@@ -58,7 +58,7 @@ class Detector(object):
     filtered_boxes = boxes.squeeze()[filtered_scores] 
     filtered_classes = classes.squeeze()[filtered_scores]   
     
-    return (filtered_boxes, filtered_scores, scores[filtered_classes])
+    return (filtered_boxes, scores[filtered_scores], filtered_classes)
   
   def overlay_shapes(self, rgb_uint8_img, threshold=0.5):
     boxes, scores, classes = self.detect(rgb_uint8_img, threshold)
