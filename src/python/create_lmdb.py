@@ -19,19 +19,35 @@ import cv2
 import caffe
 from caffe.proto import caffe_pb2
 import lmdb
-import sys
+import inspect
+import argparse
 
 #Size of images
 IMAGE_WIDTH = 227
 IMAGE_HEIGHT = 227
+#
+## base_dataset (arg 1) - input images location
+#base_dataset = sys.argv[1:][0]
+## base_dataset (arg 2) - output lmdb location
+#base = sys.argv[1:][1]
+#
+#print 'base dataset folder: '+sys.argv[1:][0]
+#print 'base folder: '+sys.argv[1:][1]
 
-# base_dataset (arg 1) - input images location
-base_dataset = sys.argv[1:][0]
-# base_dataset (arg 2) - output lmdb location
-base = sys.argv[1:][1]
 
-print 'base dataset folder: '+sys.argv[1:][0]
-print 'base folder: '+sys.argv[1:][1]
+file_path = inspect.stack()[0][1]
+repository_path = os.path.dirname(os.path.dirname(os.path.dirname(file_path)))
+dataset_path = os.path.join(repository_path, 'dataset')
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--data-path', default=dataset_path, type=str, help="Path to dataset")
+parser.add_argument('-l', '--lmdb-path', default=None, type=str, help="LMDB save location")
+args = parser.parse_args()
+base_dataset=args.data_path
+base=args.lmdb_path
+if base is None:
+  base = os.path.join(dataset_path, 'lmdb')
+if not os.path.exists(base):
+  os.makedirs(base)
 
 def transform_img(img, img_width=IMAGE_WIDTH, img_height=IMAGE_HEIGHT):
 
@@ -57,8 +73,10 @@ def make_datum(img, label):
 
 
 
-train_lmdb = base + '/train_lmdb'
-validation_lmdb = base + '/validation_lmdb'
+#train_lmdb = base + '/train_lmdb'
+#validation_lmdb = base + '/validation_lmdb'
+train_lmdb = os.path.join(base,'train_lmdb')
+validation_lmdb = os.path.join(base, 'validation_lmdb')
 
 
 if not os.path.exists(train_lmdb):

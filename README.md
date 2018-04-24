@@ -3,19 +3,19 @@
 ## Training 
 1. Go inside ```$SHAPE_DETECTION_DIR``` folder
 
-2. Download images dataset (train/test), and pre-trained caffe models: bash download.sh (change the folder paths inside)
+2. Download images dataset (train/test), and pre-trained caffe models: ```bash download.sh``` (change the folder paths inside)
 
 3. Pre-process dataset:
 
   - 3.1 Separate images into train and test, augment the train dataset (vertical flipping): 
   
 ```
-python python/modify_dataset.py dataset/
+python src/python/modify_dataset.py
 ```
   
   - 3.2 run create_lmdb.py to transform images to lmdb files
   ```
-  python python/create_lmdb.py dataset dataset/lmdb
+  python src/python/create_lmdb.py 
   ```
 
   - 3.3 compute mean.binaryproto: 

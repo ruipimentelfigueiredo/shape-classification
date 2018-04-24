@@ -9,13 +9,16 @@ Created on Wed Mar 22 20:19:54 2017
 import os
 import cv2
 import numpy as np
-import sys
-print 'base dataset folder: '+sys.argv[1:][0]
+import inspect
+import argparse
+file_path = inspect.stack()[0][1]
+repository_path = os.path.dirname(os.path.dirname(os.path.dirname(file_path)))
+dataset_path = os.path.join(repository_path, 'dataset')
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--data-path', default=dataset_path, type=str, help="Path to dataset")
+args = parser.parse_args()
+base_dataset=args.data_path
 
-#from random import shuffle
-
-base_dataset = sys.argv[1:][0]
-#base = os.path.dirname(os.path.realpath(__file__))
 objs = os.listdir(os.path.join(base_dataset,''))
 imgs = {'cylinder':list(), 'sphere':list(), 'other':list()}
 print 'creating list of images'
@@ -24,14 +27,8 @@ for obj in objs:
   idxs = os.listdir(idxs_path)
   for idx in idxs:
     imgs_path = os.path.join(idxs_path, idx)
-#  imgs_path = os.path.join(os.path.join(base_dataset,'cylinder_dataset'),obj)
     for img in os.listdir(imgs_path):
-      if obj=='cylinder':
-        imgs['cylinder'].append(cv2.imread(os.path.join(imgs_path, img)))
-      elif obj=='sphere':
-        imgs['sphere'].append(cv2.imread(os.path.join(imgs_path, img)))
-      else:
-        imgs['other'].append(cv2.imread(os.path.join(imgs_path, img)))
+      imgs[obj].append(cv2.imread(os.path.join(imgs_path, img)))
 print 'done'      
       
 def write_imgs(label='cylinder'):
