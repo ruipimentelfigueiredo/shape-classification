@@ -24,13 +24,11 @@ python src/python/modify_dataset.py
   ```
 4. Train: 
 
-  - 4.1 Change train_val.prototxt and solver.prototxt. 
-  
-  Locate and change all ocurrences of ```/shape-detection-path``` to ```$SHAPE_DETECTION_DIR```:
+  - 4.1 Switch to the root of this repository. 
   
   - 4.2 Train:
 ```
-$CAFFE_DIR/build/tools/caffe train --solver=$SHAPE_DETECTION_DIR/base_networks/squeezenet/solver.prototxt --weights $SHAPE_DETECTION_DIR/base_networks/squeezenet/squeezenet_v1.1.caffemodel 2>&1 | tee $DATASET_DIR/model_1_train.log
+$CAFFE_DIR/build/tools/caffe train --solver base_networks/squeezenet/solver.prototxt --weights base_networks/squeezenet/squeezenet_v1.1.caffemodel 2>&1 | tee model_1_train.log
 ```
 ## Testing
 the .log file contains train and test error 
