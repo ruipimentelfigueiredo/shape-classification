@@ -15,10 +15,10 @@ layer {
   }
   transform_param {
     crop_size: 227
-    mean_file: "/shape-detection-path/dataset/mean.binaryproto"
+    mean_file: "/home/atabak/shape-classification/dataset/mean.binaryproto"
   }
   data_param {
-    source: "/shape-detection-path/dataset/lmdb/train_lmdb"
+    source: "dataset/lmdb/train_lmdb"
     batch_size: 32
     backend: LMDB
   }
@@ -33,12 +33,10 @@ layer {
   }
   transform_param {
     crop_size: 227
-    mean_value: 104
-    mean_value: 117
-    mean_value: 123
+	mean_file: "dataset/mean.binaryproto"
   }
   data_param {
-    source: "/shape-detection-path/dataset/lmdb/validation_lmdb"
+    source: "dataset/lmdb/validation_lmdb"
     batch_size: 25 #not *iter_size
     backend: LMDB
   }
