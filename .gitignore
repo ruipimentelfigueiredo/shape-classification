@@ -4,3 +4,5 @@
 lib/models/research/object_detection/protos/*.py
 *.caffemodel*
 dataset/*
+*log.txt
+*.solverstate
