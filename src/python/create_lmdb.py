@@ -16,7 +16,6 @@ import numpy as np
 
 import cv2
 
-import caffe
 from caffe.proto import caffe_pb2
 import lmdb
 import inspect
@@ -39,8 +38,16 @@ file_path = inspect.stack()[0][1]
 repository_path = os.path.dirname(os.path.dirname(os.path.dirname(file_path)))
 dataset_path = os.path.join(repository_path, 'dataset')
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--data-path', default=dataset_path, type=str, help="Path to dataset")
-parser.add_argument('-l', '--lmdb-path', default=None, type=str, help="LMDB save location")
+parser.add_argument('-d', 
+                    '--data-path', 
+                    default=dataset_path, 
+                    type=str, 
+                    help="Path to dataset")
+parser.add_argument('-l', 
+                    '--lmdb-path', 
+                    default=None, 
+                    type=str, 
+                    help="LMDB save location")
 args = parser.parse_args()
 base_dataset=args.data_path
 base=args.lmdb_path

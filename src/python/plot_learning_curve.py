@@ -10,38 +10,56 @@ Modified from:
 """
 
 import os
-import sys
 import subprocess
 import pandas as pd
 
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pylab as plt
+import inspect
+import argparse
 
 plt.style.use('ggplot')
 
-home = os.path.expanduser('~/')
+learning_curve_path = './model_learning_curve.png'
 
-caffe_path = os.path.join(home, 'caffe/')
-#model_log_path = sys.argv[1]
-#learning_curve_path = sys.argv[2]
-model_log_path = os.path.join(home, 'shape-classification/moel_1_log.txt')
-learning_curve_path = './caffe_model_1_learning_curve.png'
 
-#Get directory where the model logs is saved, and move to it
-model_log_dir_path = os.path.dirname(model_log_path)
+
+file_path = inspect.stack()[0][1]
+repository_path = os.path.dirname(os.path.dirname(os.path.dirname(file_path)))
+dataset_path = os.path.join(repository_path, 'dataset')
+model_log_path = os.path.join(dataset_path, 'model.log')
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', 
+                    '--caffe-path', 
+                    required=True, 
+                    type=str, 
+                    help="Path to dataset")
+parser.add_argument('-l', 
+                    '--log-path', 
+                    default=None, 
+                    type=str, 
+                    help="Path to model.log")
+args = parser.parse_args()
+caffe_path = args.caffe_path
+log_path=args.log_path
+if log_path is None:
+  log_path = model_log_path
+
+model_log_dir_path = os.path.dirname(log_path)
 os.chdir(model_log_dir_path)
 
 '''
 Generating training and test logs
 '''
 #Parsing training/validation logs
-command = caffe_path + 'tools/extra/parse_log.sh ' + model_log_path
+command = os.path.join(caffe_path, 
+                       'tools/', 
+                       'extra/', 
+                       'parse_log.sh') + ' ' + log_path
 process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 process.wait()
 #Read training and test logs
-train_log_path = model_log_path + '.train'
-test_log_path = model_log_path + '.test'
+train_log_path = log_path + '.train'
+test_log_path = log_path + '.test'
 train_log = pd.read_csv(train_log_path, delim_whitespace=True)
 test_log = pd.read_csv(test_log_path, delim_whitespace=True)
 
@@ -73,10 +91,10 @@ plt.savefig(learning_curve_path)
 '''
 Deleting training and test logs
 '''
-#command = 'rm ' + train_log_path
-#process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-#process.wait()
-#
-#command = command = 'rm ' + test_log_path
-#process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-#process.wait()
+command = 'rm ' + train_log_path
+process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+process.wait()
+
+command = command = 'rm ' + test_log_path
+process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+process.wait()

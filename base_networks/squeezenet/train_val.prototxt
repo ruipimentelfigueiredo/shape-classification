@@ -698,9 +698,9 @@ layer {
   bottom: "pool10"
   bottom: "label"
   top: "accuracy_top5"
-  #include {
-  #  phase: TEST
-  #}
+  include {
+    phase: TRAIN
+  }
   accuracy_param {
     top_k: 3
   }
