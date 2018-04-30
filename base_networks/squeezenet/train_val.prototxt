@@ -705,4 +705,12 @@ layer {
     top_k: 3
   }
 }
-
+layer {
+  name: "prob"
+  type: "Softmax"
+  bottom: "pool10"
+  top: "prob"
+  include {
+    phase: TEST
+  }
+}
