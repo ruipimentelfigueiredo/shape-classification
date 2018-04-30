@@ -28,9 +28,13 @@ python src/python/modify_dataset.py
   
   - 4.2 Train:
 ```
-$CAFFE_DIR/build/tools/caffe train --solver base_networks/squeezenet/solver.prototxt --weights base_networks/squeezenet/squeezenet_v1.1.caffemodel 2>&1 | tee model_1_train.log
+$CAFFE_DIR/build/tools/caffe train --solver base_networks/squeezenet/solver.prototxt --weights base_networks/squeezenet/squeezenet_v1.1.caffemodel 2>&1 | tee model.log
 ```
 ## Testing
-the .log file contains train and test error 
+the .log file contains train and test errors. The following line, plots the learning curve:
+
+```
+python src/python/plot_learning_curve.py --caffe-path $CAFFE_DIR
+```
 
 
