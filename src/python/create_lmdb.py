@@ -115,7 +115,7 @@ with in_db.begin(write=True) as in_txn:
         img = transform_img(img, img_width=IMAGE_WIDTH, img_height=IMAGE_HEIGHT)
         if 'cylinder.' in img_path:
             label = 0
-        elif 'sphere.':
+        elif 'sphere.' in img_path:
             label = 1
         else:
             label = 2
@@ -138,7 +138,7 @@ with in_db.begin(write=True) as in_txn:
         img = transform_img(img, img_width=IMAGE_WIDTH, img_height=IMAGE_HEIGHT)
         if 'cylinder.' in img_path:
             label = 0
-        elif 'sphere.':
+        elif 'sphere.' in img_path:
             label = 1
         else:
             label = 2
