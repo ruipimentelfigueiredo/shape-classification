@@ -6,3 +6,4 @@ lib/models/research/object_detection/protos/*.py
 dataset/*
 *log.txt
 *.solverstate
+*p-r.pdf
