@@ -36,5 +36,10 @@ the .log file contains train and test errors. The following line, plots the lear
 ```
 python src/python/plot_learning_curve.py --caffe-path $CAFFE_DIR
 ```
+The baseline predictions for comparision are provided in ```inference_data/baseline``` directory. The following line will save the **precision recall** curve in the ```inference_data``` folder.
+
+```
+python src/python/precision_recall.py
+```
 
 
