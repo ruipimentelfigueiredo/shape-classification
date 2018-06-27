@@ -1,22 +1,15 @@
-# Caffe package
+
+# Caffe package for CNN Triplet training
 unset(Caffe_FOUND)
 
-###Set the variable Caffe_DIR as the root of your caffe directory
-get_filename_component(Caffe_DIR ${CMAKE_CURRENT_LIST_DIR} PATH)
-set(Caffe_DIR ${Caffe_DIR}/lib/caffe/build/install)
-#set(Caffe_DIR ${PARENT_DIR}/lib/caffe/build/install)
-
-find_path(Caffe_INCLUDE_DIRS NAMES caffe/caffe.hpp caffe/common.hpp caffe/net.hpp caffe/proto/caffe.pb.h caffe/util/io.hpp caffe/vision_layers.hpp
+find_path(Caffe_INCLUDE_DIRS NAMES caffe/caffe.hpp caffe/common.hpp caffe/net.hpp caffe/proto/caffe.pb.h caffe/util/io.hpp
   HINTS
-  ${Caffe_DIR}/include)
+  /home/rui/caffe/build/install/include/) #example: /home/jonhdoe/caffe
 
-
-
-find_library(Caffe_LIBRARIES NAMES caffe
+find_library(Caffe_LIBS NAMES caffe
   HINTS
-  ${Caffe_DIR}/lib)
+  /home/rui/caffe/build/lib)
 
-
-if(Caffe_LIBRARIES AND Caffe_INCLUDE_DIRS)
+if(Caffe_LIBS AND Caffe_INCLUDE_DIR)
     set(Caffe_FOUND 1)
 endif()
