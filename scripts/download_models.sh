@@ -12,10 +12,10 @@ function get_networks
 	#wget -P ./squeezenet https://raw.githubusercontent.com/DeepScale/SqueezeNet/master/SqueezeNet_v1.1/solver.prototxt
 	#wget -P ./squeezenet https://raw.githubusercontent.com/DeepScale/SqueezeNet/master/SqueezeNet_v1.1/train_val.prototxt
 	# AlexNet
-	mkdir alexnet
-	wget -P ./alexnet http://dl.caffe.berkeleyvision.org/bvlc_alexnet.caffemodel
-	wget -P ./alexnet https://raw.githubusercontent.com/BVLC/caffe/master/models/bvlc_alexnet/solver.prototxt
-	wget -P ./alexnet https://raw.githubusercontent.com/BVLC/caffe/master/models/bvlc_alexnet/train_val.prototxt
+	#mkdir alexnet
+	#wget -P ./alexnet http://dl.caffe.berkeleyvision.org/bvlc_alexnet.caffemodel
+	#wget -P ./alexnet https://raw.githubusercontent.com/BVLC/caffe/master/models/bvlc_alexnet/solver.prototxt
+	#wget -P ./alexnet https://raw.githubusercontent.com/BVLC/caffe/master/models/bvlc_alexnet/train_val.prototxt
 }
 
 
