@@ -25,7 +25,7 @@ include_directories(include ${OpenCV_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} ${Boost_
 
 #add_library(object_detector src/cpp/object_detection.cpp)
 #target_link_libraries(object_detector ${Boost_LIBRARIES} ${OpenCV_LIBS})
-add_library(cylinder_classifier src/cpp/cylinder_classifier.cpp)
+add_library(cylinder_classifier src/cpp/cylinder_classifier.cpp ${Boost_LIBRARIES} ${Caffe_LIBS})
 
 
 

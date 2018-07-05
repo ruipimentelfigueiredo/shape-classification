@@ -1,4 +1,25 @@
-﻿#include <caffe/caffe.hpp>
+/*
+ *  Copyright (C) 2018 Rui Pimentel de Figueiredo
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*!    
+    \author Rui Figueiredo : ruipimentelfigueiredo
+
+*/
+
+#include <caffe/caffe.hpp>
 #include <caffe/util/io.hpp>
 #include <caffe/blob.hpp>
 
@@ -35,11 +56,6 @@ using namespace cv;
 
 /* Pair (label, confidence) representing a prediction. */
 typedef std::pair<string, float> Prediction;
-
-
-
-
-
 
 class ClassData{
 public:
@@ -381,19 +397,10 @@ Mat CalcRGBmax(Mat i_RGB) {
     return maxRGB;
 }
 
-
-
-
-
-
-
-
-
-
 /************************************************************************/
-// Function Limit Values
-// Find min and max value of vector
-// Return bottom_data normalized
+// Function Limit Values                                                 
+// Find min and max value of vector                                      
+// Return bottom_data normalized					 
 /************************************************************************/
 float* Network::Limit_values(float* bottom_data){
     float smallest = bottom_data[0];
@@ -404,6 +411,7 @@ float* Network::Limit_values(float* bottom_data){
         if (bottom_data[i] > largest)
             largest= bottom_data[i];
     }
+
     std::vector<float> result;
     result.push_back(smallest);
     result.push_back(largest);
@@ -416,5 +424,5 @@ float* Network::Limit_values(float* bottom_data){
     }
 
     return bottom_data;
-
 }
+
