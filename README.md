@@ -27,9 +27,12 @@ python src/python/modify_dataset.py
   - 4.1 Switch to the root of this repository. 
   
   - 4.2 Train:
-```
-$CAFFE_DIR/build/tools/caffe train --solver base_networks/squeezenet/solver.prototxt --weights base_networks/squeezenet/squeezenet_v1.1.caffemodel 2>&1 | tee model.log
-```
+  
+   replace ```$DATASET_FOLDER``` with absolute path inside ```base_networks/squeezenet/train_val.prototxt``` then:
+  
+  ```
+  $CAFFE_DIR/build/tools/caffe train --solver base_networks/squeezenet/solver.prototxt --weights base_networks/squeezenet/squeezenet_v1.1.caffemodel 2>&1 | tee model.log
+  ```
 ## Testing
 the .log file contains train and test errors. The following line, plots the learning curve:
 
