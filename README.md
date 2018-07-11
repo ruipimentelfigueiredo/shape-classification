@@ -42,4 +42,19 @@ The baseline predictions for comparision are provided in ```inference_data/basel
 python src/python/precision_recall.py
 ```
 
+### Reference
 
+In case you use our library in your research, please cite our work
+
+```
+@inproceedings{figueiredo2017shape,
+  title={Shape-based attention for identification and localization of cylindrical objects},
+  author={Figueiredo, Rui and Dehban, Atabak and Bernardino, Alexandre and Santos-Victor, Jos{\'e} and Ara{\'u}jo, Helder},
+  booktitle={IEEE International Conference on Development and Learning and on Epigenetic Robotics (ICDL-EpiRob)},
+  volume={18},
+  pages={21},
+  year={2017}
+}
+
+```
+[paper]: http://vislab.isr.ist.utl.pt/wp-content/uploads/2017/09/rfigueiredo-icdlepirob2017.pdf
