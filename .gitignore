@@ -7,3 +7,4 @@ dataset/*
 *log.txt
 *.solverstate
 *p-r.pdf
+*.log

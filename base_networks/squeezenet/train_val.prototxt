@@ -15,10 +15,10 @@ layer {
   }
   transform_param {
     crop_size: 227
-    mean_file: "/home/atabak/shape-classification/dataset/mean.binaryproto"
+    mean_file: "$DATASET_FOLDER/mean.binaryproto" # replace dataset folder with absolute path
   }
   data_param {
-    source: "dataset/lmdb/train_lmdb"
+    source: "$DATASET_FOLDER/lmdb/train_lmdb"
     batch_size: 32
     backend: LMDB
   }
@@ -33,10 +33,10 @@ layer {
   }
   transform_param {
     crop_size: 227
-	mean_file: "dataset/mean.binaryproto"
+	mean_file: "$DATASET_FOLDER/mean.binaryproto" # replace dataset folder with absolute path
   }
   data_param {
-    source: "dataset/lmdb/validation_lmdb"
+    source: "$DATASET_FOLDER/lmdb/validation_lmdb" # replace dataset folder with absolute path
     batch_size: 25 #not *iter_size
     backend: LMDB
   }
