@@ -50,7 +50,7 @@
 using namespace caffe;
 using namespace std;
 using std::string;
-using namespace cv;
+//using namespace cv;
 //using cv::Mat;
 //using namespace boost::numpy;
 
@@ -110,7 +110,7 @@ public:
     std::vector<ClassificationData> Classify(const cv::Mat& img);
 
     float* Limit_values(float* bottom_data); // NEW
-    float find_max(Mat gradient_values);
+    float find_max(cv::Mat gradient_values);
     int ClassifyBest(const cv::Mat& img);
 private:
     void SetMean(const string& mean_file);
@@ -154,7 +154,7 @@ Network::Network(const string& model_file,
     // Load mean file
     SetMean(mean_file);
 
-    Blob<float>* output_layer = net->output_blobs()[0];
+    //Blob<float>* output_layer = net->output_blobs()[0];
     /*CHECK_EQ(labels.size(), output_layer->channels())
                 << "Number of labels is different from the output layer dimension.";*/
 }
@@ -249,7 +249,7 @@ std::vector<ClassificationData> Network::Classify(const cv::Mat& img) {
 /************************************************************************/
 int Network::ClassifyBest(const cv::Mat& img) {
     std::vector<float> output = Predict(img);  // output is a float vector
-    for(int i=0; i<output.size();++i)
+    for(unsigned int i=0; i<output.size();++i)
     {
 	std::cout << output[i] << std::endl;
     }
@@ -386,13 +386,13 @@ void Network::Preprocess(const cv::Mat& img, std::vector<cv::Mat>* input_channel
 // Get the highest value of R,G,B for each pixel
 /************************************************************************/
 
-Mat CalcRGBmax(Mat i_RGB) {
+cv::Mat CalcRGBmax(cv::Mat i_RGB) {
 
     std::vector<cv::Mat> planes(3);
 
     cv::split(i_RGB, planes);
 
-    Mat maxRGB = max(planes[2], cv::max(planes[1], planes[0]));
+    cv::Mat maxRGB = max(planes[2], cv::max(planes[1], planes[0]));
 
     return maxRGB;
 }
@@ -405,7 +405,7 @@ Mat CalcRGBmax(Mat i_RGB) {
 float* Network::Limit_values(float* bottom_data){
     float smallest = bottom_data[0];
     float largest = bottom_data[0];
-    for (int i=1; i<sizeof(bottom_data); i++) {
+    for (unsigned int i=1; i<sizeof(bottom_data); i++) {
         if (bottom_data[i] < smallest)
             smallest = bottom_data[i];
         if (bottom_data[i] > largest)
@@ -417,7 +417,7 @@ float* Network::Limit_values(float* bottom_data){
     result.push_back(largest);
 
     // Normalize
-    for (int i=0; i< sizeof(bottom_data); ++i){
+    for (unsigned int i=0; i< sizeof(bottom_data); ++i){
         bottom_data[i] = bottom_data[i]-result[0];
         bottom_data[i] = bottom_data[i]/result[1];
         //cout << bottom_data[i] << "\n" << endl;

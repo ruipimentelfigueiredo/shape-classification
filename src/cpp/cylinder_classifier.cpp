@@ -43,9 +43,9 @@ int CylinderClassifier::classifyBest(const cv::Mat& img)
 float CylinderClassifier::classify(const cv::Mat& img)
 {
 	std::vector<ClassificationData> classifications=network->Classify(img);
-	int best_index=0;
-	float confidence=0;
-	float sum=0.0;
+	//int best_index=0;
+	//float confidence=0;
+	//float sum=0.0;
 	/*for(unsigned int i=0; i<classifications.size();++i)
 	{
 		sum+=classifications[i].confidence;
