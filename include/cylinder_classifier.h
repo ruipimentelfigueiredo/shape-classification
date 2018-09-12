@@ -18,6 +18,9 @@
     \author Rui Figueiredo : ruipimentelfigueiredo
 */
 
+#ifndef SHAPECLASSIFIER_H
+#define SHAPECLASSIFIER_H
+
 #include <caffe/caffe.hpp>
 #include <caffe/util/io.hpp>
 #include <caffe/blob.hpp>
@@ -75,6 +78,6 @@ public:
 };
 
 
-
+#endif // SHAPECLASSIFIER_H
 
 
