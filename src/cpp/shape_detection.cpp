@@ -54,16 +54,16 @@ void ObjectDetection::postprocess(Mat& frame, const Mat& out, Net& net)
 	    // [batchId, classId, confidence, left, top, right, bottom]
 	    for (size_t i = 0; i < out.total(); i += 7)
 	    {
-		float confidence = data[i + 2];
-		if (confidence > confThreshold)
-		{
-		    int left = (int)data[i + 3];
-		    int top = (int)data[i + 4];
-		    int right = (int)data[i + 5];
-		    int bottom = (int)data[i + 6];
-		    int classId = (int)(data[i + 1]) - 1;  // Skip 0th background class id.
-		    drawPred(classId, confidence, left, top, right, bottom, frame);
-		}
+			float confidence = data[i + 2];
+			if (confidence > confThreshold)
+			{
+				int left = (int)data[i + 3];
+				int top = (int)data[i + 4];
+				int right = (int)data[i + 5];
+				int bottom = (int)data[i + 6];
+				int classId = (int)(data[i + 1]) - 1;  // Skip 0th background class id.
+				drawPred(classId, confidence, left, top, right, bottom, frame);
+			}
 	    }
 	}
 	else if (outLayerType == "DetectionOutput")

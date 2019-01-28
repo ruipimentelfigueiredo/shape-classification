@@ -6,8 +6,8 @@ Created on Wed May  9 14:49:38 2018
 @author: atabak
 """
 
-
 from os import path as op
+import os
 import inspect
 import argparse
 import glob
@@ -21,22 +21,22 @@ from itertools import cycle
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import average_precision_score
 from matplotlib import pyplot as plt
-
-
+import sys
 caffe.set_mode_gpu()
 
 #Size of images
 IMAGE_WIDTH = 227
 IMAGE_HEIGHT = 227
 
+fontsize=20
 
-file_path = inspect.stack()[0][1]
-repository_path = op.dirname(op.dirname(op.dirname(file_path)))
-weights_path = op.join(repository_path, 'train_iter_201.caffemodel')
-baseline_dir = op.join(repository_path, 'inference_data', 'baseline')
-dataset_path = op.join(repository_path, 'dataset')
-deploy_path = op.join(repository_path, 'base_networks', 'squeezenet', 'deploy.prototxt')
-mean_path = op.join(repository_path, 'dataset', 'mean.binaryproto')
+file_path = os.getcwd()
+weights_path = op.join(file_path, 'train_iter_201.caffemodel')
+output_file = op.join(file_path, 'p-r.pdf')
+dataset_path = op.join(file_path, 'dataset-path')
+deploy_path =  op.join(file_path, 'base_networks', 'squeezenet', 'deploy.prototxt')
+mean_path =    op.join(file_path, 'mean.binaryproto')
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-w', 
                     '--weights-path', 
@@ -44,8 +44,8 @@ parser.add_argument('-w',
                     type=str, 
                     help="Path to the trained weights")
 parser.add_argument('-b', 
-                    '--baseline-dir', 
-                    default=baseline_dir, 
+                    '--output-file', 
+                    default=output_file, 
                     type=str, 
                     help="Directory of baseline classifications")
 parser.add_argument('-p', 
@@ -58,13 +58,30 @@ parser.add_argument('-d',
                     default=dataset_path, 
                     type=str, 
                     help="Path to dataset")
+parser.add_argument('-fc', 
+                    '--fitting-cylinders-path', 
+                    default=None, 
+                    type=str, 
+                    help="Path to fitting logs folder")
+parser.add_argument('-fo', 
+                    '--fitting-others-paths', 
+                    default=[], 
+                    #type=list, 
+                    help="Paths to fitting logs folder",
+                    nargs='+')
 parser.add_argument('-m', 
                     '--mean-binaryproto', 
                     default=mean_path, 
                     type=str, 
-                    help="Path to the mean file")
-args = parser.parse_args()
+                    help="Path to the mean file",
+                    required=True)
+
+args=parser.parse_args()
 base_dataset=args.data_path
+fitting_cylinders_path=args.fitting_cylinders_path
+fitting_others_paths=args.fitting_others_paths
+mean_path=args.mean_binaryproto
+output_file=args.output_file
 
 def transform_img(img, img_width=IMAGE_WIDTH, img_height=IMAGE_HEIGHT):
 
@@ -84,11 +101,10 @@ Reading mean image, caffe model and its weights
 '''
 #Read mean image
 mean_blob = caffe_pb2.BlobProto()
-with open(args.mean_binaryproto) as f:
+with open(mean_path) as f:
     mean_blob.ParseFromString(f.read())
-mean_array = np.asarray(mean_blob.data, dtype=np.float32).reshape(
+    mean_array = np.asarray(mean_blob.data, dtype=np.float32).reshape(
     (mean_blob.channels, mean_blob.height, mean_blob.width))
-
 
 #Read model architecture and trained model's weights
 net = caffe.Net(args.deploy_prototxt, 
@@ -104,11 +120,8 @@ transformer.set_transpose('data', (2,0,1))
 Making predicitions
 '''
 #Reading image paths
-
-
 test_img_paths = [img_path for img_path in \
-                  glob.glob(op.join(args.data_path,'test/')+'*jpg')]
-    
+                  glob.glob(op.join(args.data_path,'')+'*jpg')] 
 
 #Making predictions
 y_score = list()
@@ -139,56 +152,92 @@ precision = dict()
 recall = dict()
 average_precision = dict()
 for i in range(n_classes):
-    precision[i], recall[i], _ = precision_recall_curve(y_test[:, i],
-                                                        y_score[:, i])
+    precision[i], recall[i], _ = precision_recall_curve(y_test[:, i], y_score[:, i])
     average_precision[i] = average_precision_score(y_test[:, i], y_score[:, i])
 
 # Compute micro-average ROC curve and ROC area
-precision["micro"], recall["micro"], _ = precision_recall_curve(y_test.ravel(),
-    y_score.ravel())
-average_precision["micro"] = average_precision_score(y_test, y_score,
-                                                     average="micro")
+precision["micro"], recall["micro"], _ = precision_recall_curve(y_test.ravel(), y_score.ravel())
+average_precision["micro"] = average_precision_score(y_test, y_score, average="micro")
 
-
-
-second_y_score_cyl = np.genfromtxt(op.join(args.baseline_dir,'fitting_quality_cylinders_1.txt')).reshape(-1,1)
-second_y_score_cyl = np.hstack((second_y_score_cyl, 1.0-second_y_score_cyl))
-second_y_test_cyl = np.ones_like(second_y_score_cyl)*np.asarray([1,0])
-
-second_y_score_obj = np.genfromtxt(op.join(args.baseline_dir,'fitting_quality_others_1.txt')).reshape(-1,1)
-second_y_score_obj = np.hstack((second_y_score_obj, 1.0 - second_y_score_obj))
-second_y_test_obj = np.ones_like(second_y_score_obj)*np.asarray([0,1])
-
-second_y_test = np.vstack((second_y_test_cyl, second_y_test_obj))
-second_y_score = np.vstack((second_y_score_cyl, second_y_score_obj))
-#
-#
-#
 precision_2 = dict()
 recall_2 = dict()
 average_precision_2 = dict()
+
+second_y_score_cyl=np.array([]).reshape(-1,2)
+second_y_test_cyl=np.array([]).reshape(-1,2)
+
+# fitting parse cylinder scores
+filename='cluster_fitting_score.txt'
+for base_root, base_dirs, base_files in os.walk(fitting_cylinders_path):
+    for directory in base_dirs:
+        path_=fitting_cylinders_path+directory+'/results/'
+
+        if directory=='results':
+            continue
+
+        # cylinders
+        second_y_score_cyl_temp=np.genfromtxt(op.join(path_,filename)).reshape(-1,1)
+        second_y_score_cyl_temp=np.hstack((second_y_score_cyl_temp, 1.0-second_y_score_cyl_temp))
+        second_y_test_cyl_temp=np.ones_like(second_y_score_cyl_temp)*np.asarray([1,0])
+
+        second_y_score_cyl=np.append(second_y_score_cyl.reshape(-1,2),second_y_score_cyl_temp,axis=0)
+        second_y_test_cyl=np.append(second_y_test_cyl.reshape(-1,2),second_y_test_cyl_temp,axis=0)
+
+
+second_y_score_obj=np.array([]).reshape(-1,2)
+second_y_test_obj=np.array([]).reshape(-1,2)
+
+# fitting parse other scores
+for fitting_others_path in fitting_others_paths[0].split(","):
+    for base_root, base_dirs, base_files in os.walk(fitting_others_path):
+        for directory in base_dirs:
+            path_=fitting_others_path+directory+'/results/'
+
+            if directory=='results':
+                continue
+
+            # others
+            second_y_score_obj_temp=np.genfromtxt(op.join(path_,filename)).reshape(-1,1)
+            second_y_score_obj_temp=np.hstack((1.0-second_y_score_obj_temp, second_y_score_obj_temp))
+            second_y_test_obj_temp=np.ones_like(second_y_score_obj_temp)*np.asarray([0,1])
+
+            second_y_score_obj=np.append(second_y_score_obj.reshape(-1,2),second_y_score_obj_temp,axis=0)
+            second_y_test_obj=np.append(second_y_test_obj.reshape(-1,2),second_y_test_obj_temp,axis=0)
+
+
+second_y_test = np.vstack((second_y_test_cyl, second_y_test_obj))
+second_y_score = np.vstack((second_y_score_cyl, second_y_score_obj))
+
+
+temp_precision_2=dict()
+temp_average_precision_2=dict()
+temp_recall_2=dict()
+
 for i in range(n_classes):
-    precision_2[i], recall_2[i], _ = precision_recall_curve(second_y_test[:, i],
-                                                        second_y_score[:, i])
-    average_precision_2[i] = average_precision_score(second_y_test[:, i], second_y_score[:, i])
+    temp_precision_2[i], temp_recall_2[i], _ = precision_recall_curve(second_y_test[:, i].astype(int), second_y_score[:, i])
+    temp_average_precision_2[i] = average_precision_score(second_y_test[:, i].astype(int), second_y_score[:, i])
+
+    precision_2.update(temp_precision_2)
+    recall_2.update(temp_recall_2)
+    average_precision_2.update(temp_average_precision_2)
 
 # Compute micro-average ROC curve and ROC area
-precision_2["micro"], recall_2["micro"], _ = precision_recall_curve(second_y_test.ravel(),
-    second_y_score.ravel())
-average_precision["micro"] = average_precision_score(y_test, y_score,
-                                                     average="micro")
+#precision_2["micro"], recall_2["micro"], _ = precision_recall_curve(second_y_test.ravel(), second_y_score.ravel())
+#average_precision["micro"] = average_precision_score(y_test, y_score, average="micro")
 # Plot Precision-Recall curve
 colors = cycle(['navy', 'turquoise', 'darkorange', 'cornflowerblue', 'teal'])
 lw = 2
 plt.clf()
-plt.plot(recall[0], precision[0], lw=lw, color='cornflowerblue', 
-         label='Classifier AUC={0:0.2f}'.format(average_precision[0]))
-plt.plot(recall_2[0], precision_2[0], lw=lw, color='darkorange', 
-         label='baseline AUC={0:0.2f}'.format(average_precision_2[0]))
-plt.xlabel('Recall')
-plt.ylabel('Precision')
-plt.ylim([0.0, 1.05])
-plt.xlim([0.0, 1.0])
-plt.title('Precision-recall curve of class cylinders')
-plt.legend(loc="lower left")
-plt.savefig(op.join(op.dirname(args.baseline_dir),'p-r.pdf'), format='pdf')
+fig, ax1 = plt.subplots()
+ax1.plot(recall[0], precision[0], lw=lw, color='blue', label='classifier AUC={0:0.2f}'.format(average_precision[0]))
+ax1.plot(recall_2[0], precision_2[0], lw=lw, color='orange', label='baseline AUC={0:0.2f}'.format(average_precision_2[0]))
+ax1.set_xlabel('Recall',fontsize=fontsize)
+ax1.set_ylabel('Precision',fontsize=fontsize)
+ax1.tick_params(labelsize=fontsize)
+ax1.set_ylim([0.0, 1.05])
+ax1.set_xlim([0.0, 1.0])
+#plt.title('Precision-recall curve of class cylinders')
+ax1.legend(loc="lower left")
+plt.tight_layout()
+plt.savefig(op.join(op.dirname(args.output_file),'p-r.pdf'), format='pdf')
+

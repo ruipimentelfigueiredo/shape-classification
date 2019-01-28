@@ -24,15 +24,6 @@ import argparse
 #Size of images
 IMAGE_WIDTH = 227
 IMAGE_HEIGHT = 227
-#
-## base_dataset (arg 1) - input images location
-#base_dataset = sys.argv[1:][0]
-## base_dataset (arg 2) - output lmdb location
-#base = sys.argv[1:][1]
-#
-#print 'base dataset folder: '+sys.argv[1:][0]
-#print 'base folder: '+sys.argv[1:][1]
-
 
 file_path = inspect.stack()[0][1]
 repository_path = os.path.dirname(os.path.dirname(os.path.dirname(file_path)))
@@ -51,6 +42,7 @@ parser.add_argument('-l',
 args = parser.parse_args()
 base_dataset=args.data_path
 base=args.lmdb_path
+
 if base is None:
   base = os.path.join(dataset_path, 'lmdb')
 if not os.path.exists(base):
@@ -94,7 +86,7 @@ if not os.path.exists(validation_lmdb):
 #os.system('rm -rf  ' + train_lmdb)
 #os.system('rm -rf  ' + validation_lmdb)
 
-
+print base_dataset
 
 #train_data = [img for img in glob.glob("../../dataset_v3/train/*jpg")]
 train_data = [img for img in glob.glob(base_dataset + '/train/*jpg')]

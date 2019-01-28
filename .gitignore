@@ -8,3 +8,4 @@ dataset/*
 *.solverstate
 *p-r.pdf
 *.log
+/output

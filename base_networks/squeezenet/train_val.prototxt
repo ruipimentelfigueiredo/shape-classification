@@ -15,10 +15,10 @@ layer {
   }
   transform_param {
     crop_size: 227
-    mean_file: "$DATASET_FOLDER/mean.binaryproto" # replace dataset folder with absolute path
+    mean_file: "$SHAPE_CLASSIFICATION_FOLDER/output/mean.binaryproto" # replace dataset folder with absolute path
   }
   data_param {
-    source: "$DATASET_FOLDER/lmdb/train_lmdb"
+    source: "$SHAPE_CLASSIFICATION_FOLDER/output/lmdb/train_lmdb"
     batch_size: 32
     backend: LMDB
   }
@@ -33,10 +33,10 @@ layer {
   }
   transform_param {
     crop_size: 227
-	mean_file: "$DATASET_FOLDER/mean.binaryproto" # replace dataset folder with absolute path
+	mean_file: "$SHAPE_CLASSIFICATION_FOLDER/output/mean.binaryproto" # replace dataset folder with absolute path
   }
   data_param {
-    source: "$DATASET_FOLDER/lmdb/validation_lmdb" # replace dataset folder with absolute path
+    source: "$SHAPE_CLASSIFICATION_FOLDER/output/lmdb/validation_lmdb" # replace dataset folder with absolute path
     batch_size: 25 #not *iter_size
     backend: LMDB
   }
